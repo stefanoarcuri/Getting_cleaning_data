@@ -1,2 +1,2 @@
 # datasciencecoursera
-This repository is for DSC course
+This repository is for getting and cleaning data
