@@ -27,23 +27,25 @@ sensor_data <- rbind(training_sensor_data, test_sensor_data)
 sensor_labels <- rbind(rbind(features, c(1000, "Subject")), c(1001, "ActivityId"))[,2]
 names(sensor_data) <- sensor_labels
 # mean and stdev
-sensor_data_mean_std <- sensor_data[,grepl("mean|std|Subject|ActivityId", names(sensor_data))]
-sensor_data_mean_std <- join(sensor_data_mean_std, activity_labels, by = "ActivityId", match = "first")
-sensor_data_mean_std <- sensor_data_mean_std[,-1]
-names(sensor_data_mean_std) <- gsub('\\(|\\)',"",names(sensor_data_mean_std), perl = TRUE)
-names(sensor_data_mean_std) <- make.names(names(sensor_data_mean_std))
+sensor_dm <- sensor_data[,grepl("mean|std|Subject|ActivityId", names(sensor_data))]
+sensor_dm <- join(sensor_dm, activity_labels, by = "ActivityId", match = "first")
+sensor_dm <- sensor_dm[,-1]
+
+
+names(sensor_dm) <- gsub('\\(|\\)',"",names(sensor_dm), perl = TRUE)
+names(sensor_dm) <- make.names(names(sensor_dm))
 # Changing names
-names(sensor_data_mean_std) <- gsub('Acc',"Acceleration",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('GyroJerk',"AngularAcceleration",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('Gyro',"AngularSpeed",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('Mag',"Magnitude",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('^t',"TimeDomain.",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('^f',"FrequencyDomain.",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('\\.mean',".Mean",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('\\.std',".StandardDeviation",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('Freq\\.',"Frequency.",names(sensor_data_mean_std))
-names(sensor_data_mean_std) <- gsub('Freq$',"Frequency",names(sensor_data_mean_std))
+names(sensor_dm) <- gsub('Acc',"Acceleration",names(sensor_dm))
+names(sensor_dm) <- gsub('GyroJerk',"AngularAcceleration",names(sensor_dm))
+names(sensor_dm) <- gsub('Gyro',"AngularSpeed",names(sensor_dm))
+names(sensor_dm) <- gsub('Mag',"Magnitude",names(sensor_dm))
+names(sensor_dm) <- gsub('^t',"TimeDomain.",names(sensor_dm))
+names(sensor_dm) <- gsub('^f',"FrequencyDomain.",names(sensor_dm))
+names(sensor_dm) <- gsub('\\.mean',".Mean",names(sensor_dm))
+names(sensor_dm) <- gsub('\\.std',".StandardDeviation",names(sensor_dm))
+names(sensor_dm) <- gsub('Freq\\.',"Frequency.",names(sensor_dm))
+names(sensor_dm) <- gsub('Freq$',"Frequency",names(sensor_dm))
 
 # write data set
-sensor_avg_by_act_sub = ddply(sensor_data_mean_std, c("Subject","Activity"), numcolwise(mean))
-write.table(sensor_avg_by_act_sub, file = "sens.txt")
+sensor = ddply(sensor_dm, c("Subject","Activity"), numcolwise(mean))
+write.table(sensor, file = "sens.txt")
